@@ -2,6 +2,8 @@
 const { INTEGER, STRING } = require("sequelize");
 const Database = require("./index.js");
 
+const LessonsModel = require("./LessonsModels.js");
+
 const ModulesModel = Database.define("modules", {
     module_id: {
         type: INTEGER,
@@ -21,6 +23,8 @@ const ModulesModel = Database.define("modules", {
         allowNull: false
     }
 }, {timestamps: false})
+
+ModulesModel.hasMany(LessonsModel, { foreignKey: "module_id", allowNull: false, as: "lessons" });
 
 Database.sync();
 

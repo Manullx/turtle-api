@@ -2,6 +2,8 @@
 const { INTEGER, STRING } = require("sequelize");
 const Database = require("./index.js");
 
+const QuestionsOptionsModel = require("./QuestionsOptionsModel.js");
+
 const QuestionsModel = Database.define("questions", {
     question_id: {
         type: INTEGER,
@@ -28,5 +30,7 @@ const QuestionsModel = Database.define("questions", {
 }, {timestamps: false})
 
 Database.sync();
+
+QuestionsModel.hasMany(QuestionsOptionsModel, { foreignKey: "question_id", allowNull: false, as: "questionsOptions" });
 
 module.exports = QuestionsModel;

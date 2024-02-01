@@ -2,6 +2,8 @@
 const { INTEGER, STRING, TEXT } = require("sequelize");
 const Database = require("./index.js");
 
+const QuestionsModel = require("./QuestionsModel.js")
+
 const LessonsModel = Database.define("lessons", {
     lesson_id: {
         type: INTEGER,
