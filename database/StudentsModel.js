@@ -1,4 +1,4 @@
-const { INTEGER, STRING } = require("sequelize");
+const { INTEGER, STRING, BOOLEAN } = require("sequelize");
 const Database = require("./index.js");
 
 const StudentsModel = Database.define("students", {
@@ -28,7 +28,11 @@ const StudentsModel = Database.define("students", {
     type: STRING,
     allowNull: true
   },
-
+  firstLogin: {
+    type: BOOLEAN,
+    defaultValue: false,
+    allowNull: false
+  }
 }, {timestamps: false})
 
 Database.sync();
