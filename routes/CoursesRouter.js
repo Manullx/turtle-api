@@ -94,6 +94,6 @@ CoursesRouter.get("/getAdminCourses", (req, res) => {
         throw err
      });
 
-})
+});
 
 module.exports = CoursesRouter;
