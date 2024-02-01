@@ -16,6 +16,10 @@ const AdminsModel = Database.define("admins", {
     type: STRING,
     allowNull: false
   },
+  admin_password: {
+    type: STRING,
+    allowNull: false
+  },
   
 }, {timestamps: false})
 

@@ -11,14 +11,16 @@ StudentsRouter.post("/createStudent", (req, res) => {
         student_name,
         student_document,
         student_email,
-        student_phone
+        student_phone,
+        student_password
     } = student;
 
     StudentsModel.create({
         student_name,
         student_document,
         student_email,
-        student_phone
+        student_phone,
+        student_password
     }).then(() => {
         res.status(200).send("Estudante criado com sucesso")
     }).catch(err => {

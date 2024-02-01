@@ -24,6 +24,10 @@ const StudentsModel = Database.define("students", {
     type: STRING,
     allowNull: true
   },
+  student_password: {
+    type: STRING,
+    allowNull: true
+  },
 
 }, {timestamps: false})
 
