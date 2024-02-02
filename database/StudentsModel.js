@@ -1,4 +1,3 @@
-
 const { INTEGER, STRING, BOOLEAN } = require("sequelize");
 const Database = require("./index.js");
 
@@ -40,7 +39,7 @@ const StudentsModel = Database.define("students", {
     type: INTEGER,
     allowNull: true,
     references: {
-      model: "companies",
+      model: CompaniesModel,
       key: "company_id"  
     }
   }

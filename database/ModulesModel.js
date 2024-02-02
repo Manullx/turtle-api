@@ -2,7 +2,7 @@
 const { INTEGER, STRING } = require("sequelize");
 const Database = require("./index.js");
 
-const LessonsModel = require("./LessonsModels.js");
+const LessonsModel = require("./LessonsModel.js");
 
 const ModulesModel = Database.define("modules", {
     module_id: {

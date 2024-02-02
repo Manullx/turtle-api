@@ -7,7 +7,7 @@ const CoursesRouter = Router();
 
 const CoursesModel = require("../database/CoursesModel.js");
 const ModulesModel = require("../database/ModulesModel.js");
-const LessonsModel = require("../database/LessonsModels.js");
+const LessonsModel = require("../database/LessonsModel.js");
 const QuestionsModel = require("../database/QuestionsModel.js");
 const QuestionsOptionsModel = require("../database/QuestionsOptionsModel.js");
 
