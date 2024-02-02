@@ -1,3 +1,4 @@
+
 const { INTEGER, STRING, BOOLEAN } = require("sequelize");
 const Database = require("./index.js");
 
@@ -28,7 +29,7 @@ const StudentsModel = Database.define("students", {
     type: STRING,
     allowNull: true
   },
-  firstLogin: {
+  first_login: {
     type: BOOLEAN,
     defaultValue: false,
     allowNull: false
