@@ -2,6 +2,8 @@
 const { INTEGER, STRING, BOOLEAN } = require("sequelize");
 const Database = require("./index.js");
 
+const CompaniesModel = require('./CompaniesModel.js');
+
 const StudentsModel = Database.define("students", {
   student_id: {
     type: INTEGER,
@@ -33,8 +35,17 @@ const StudentsModel = Database.define("students", {
     type: BOOLEAN,
     defaultValue: false,
     allowNull: false
+  },
+  student_company_id: {
+    type: INTEGER,
+    allowNull: true,
+    references: {
+      model: "companies",
+      key: "company_id"  
+    }
   }
 }, {timestamps: false})
+
 
 Database.sync();
 

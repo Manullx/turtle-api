@@ -31,6 +31,7 @@ const RegistersModel = Database.define("registers", {
     },
     is_done: {
         type: BOOLEAN,
+        defaultValue: false,
         allowNull: false
     }
 
