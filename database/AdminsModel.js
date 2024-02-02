@@ -20,11 +20,7 @@ const AdminsModel = Database.define("admins", {
     type: STRING,
     allowNull: false
   },
-  firstLogin: {
-    type: BOOLEAN,
-    defaultValue: false,
-    allowNull: false
-  }
+
   
 }, {timestamps: false})
 

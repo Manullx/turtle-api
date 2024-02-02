@@ -15,7 +15,7 @@ const StudentsModel = Database.define("students", {
     allowNull: false
   },
   student_document: {
-    type: INTEGER,
+    type: STRING,
     allowNull: false
   },
   student_email: {
@@ -35,7 +35,7 @@ const StudentsModel = Database.define("students", {
     defaultValue: false,
     allowNull: false
   },
-  student_company_id: {
+  company_id: {
     type: INTEGER,
     allowNull: true,
     references: {
