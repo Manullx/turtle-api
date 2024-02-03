@@ -24,7 +24,7 @@ StudentsRouter.post("/createStudent", (req, res) => {
         student_email,
         student_phone,
         student_password,
-        student_company_id
+        company_id: student_company_id
     }).then((studentInfo) => {
 
         const { student_id } = studentInfo.dataValues;
@@ -111,5 +111,27 @@ StudentsRouter.get("/getStudents", async (req, res) => {
     }
 });
 
+StudentsRouter.get("/getStudentByDocument", async (req, res) => {
+
+
+  const document = req.query.document;
+
+
+  try {
+      const student = await StudentsModel.findOne({
+          attributes: { exclude: ['student_id'] },
+          where: {
+            student_document: document
+          }
+        })
+
+    if (student) {
+      res.status(200).json(student);
+    } 
+  } catch (error) {
+    console.error('Erro ao buscar estudante', error);
+    res.status(500).json({ success: false, message: 'Erro interno do servidor.', details: 'Erro ao buscar estudante' });
+  }
+});
 
 module.exports = StudentsRouter
