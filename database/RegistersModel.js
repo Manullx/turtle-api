@@ -19,7 +19,8 @@ const RegistersModel = Database.define("registers", {
         references: {
             model: StudentsModel,
             key: "student_id"
-        }
+        },
+        onDelete: 'CASCADE'
     },
     course_id: {
         type: INTEGER,

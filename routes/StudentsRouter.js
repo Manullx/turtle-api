@@ -211,5 +211,50 @@ StudentsRouter.post("/authStudent", (req, res) => {
     });
 
 })
+StudentsRouter.put('/updateStudent', async (req, res) => {
+  const document = req.query.document;
+  const updatedData = req.body; 
+
+  const {
+    student_name,
+    student_document,
+    student_email,
+    student_phone,
+    student_password
+  } = updatedData.student;
+
+  const {
+    company_id,
+  } = updatedData.workplace;
+
+  const data = {
+    student_name,
+    student_document,
+    student_email,
+    student_phone,
+    student_password,
+    company_id
+  }
+
+  try {
+    const student = await StudentsModel.findOne({
+      where: {
+        student_document: document
+      }
+    });
+
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Estudante não encontrado.' });
+    }
+
+    await student.update(data);
+
+    res.status(200).json({ success: true, message: 'Estudante atualizado com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao atualizar estudante', error);
+    res.status(500).json({ success: false, message: 'Erro interno do servidor.', details: 'Erro ao atualizar estudante' });
+  }
+});
+
 
 module.exports = StudentsRouter;
