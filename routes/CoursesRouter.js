@@ -2,7 +2,7 @@
 const { Router } = require("express");
 
 const CoursesRouter = Router();
-
+const { Op } = require("sequelize");
 
 
 const CoursesModel = require("../database/CoursesModel.js");
@@ -10,6 +10,7 @@ const ModulesModel = require("../database/ModulesModel.js");
 const LessonsModel = require("../database/LessonsModel.js");
 const QuestionsModel = require("../database/QuestionsModel.js");
 const QuestionsOptionsModel = require("../database/QuestionsOptionsModel.js");
+const StudentsModel = require("../database/StudentsModel.js");
 
 CoursesRouter.post("/createCourse", (req, res) => {
 
@@ -64,6 +65,57 @@ CoursesRouter.post("/createCourse", (req, res) => {
 
 
 })
+
+CoursesRouter.get("/getCourseStudent", async (req, res) => {
+    const idStudent = req.query.idStudent;
+
+    console.log(idStudent)
+
+    try {
+        const courseStudent = await StudentsModel.findAll({
+            where: {
+                student_id: idStudent,  
+            },
+        });
+
+        if (!courseStudent || courseStudent.length === 0) {
+            return res.status(200).json({ success: true, message: 'Aluno não encontrado ou não matriculado em nenhum curso.' });
+        }
+
+        const idsCourse = courseStudent.map(curso => curso.curso_id);
+
+        const dadosCursos = await CoursesModel.findAll({
+            where: {
+                course_id: {
+                    [Op.in]: idsCourse,
+                },
+            },
+            include: [
+                {
+                    model: ModulesModel,
+                    as: "modules",
+                    include: {
+                        model: LessonsModel,
+                        as: "lessons",
+                    },
+                },
+                {
+                    model: QuestionsModel,
+                    as: "questions",
+                    include: {
+                        model: QuestionsOptionsModel,
+                        as: "questionsOptions",
+                    },
+                },
+            ],
+        });
+
+        res.status(200).json(dadosCursos.map(curso => curso.toJSON()));
+    } catch (error) {
+        console.error('Erro ao buscar cursos do aluno', error);
+        res.status(500).json({ success: false, message: 'Erro interno do servidor.', details: 'Erro ao buscar cursos do aluno' });
+    }
+});
 
 CoursesRouter.get("/getAdminCourses", (req, res) => {
 
