@@ -96,4 +96,27 @@ CoursesRouter.get("/getAdminCourses", (req, res) => {
 
 });
 
+CoursesRouter.delete("/deleteCourse", async (req, res) => {
+    const {id} = req.headers;
+  
+    try {
+      const course = await CoursesModel.findOne({
+        where: {
+          course_id: id
+        }
+      });
+  
+      if (!course) {
+        return res.status(404).json({ success: false, message: 'Curso não encontrado.' });
+      }
+  
+      await course.destroy();
+  
+      res.status(200).json({ success: true, message: 'Curso excluído com sucesso.' });
+    } catch (error) {
+      console.error('Erro ao excluir curso', error);
+      res.status(500).json({ success: false, message: 'Erro interno do servidor.', details: 'Erro ao excluir curso' });
+    }
+  });
+
 module.exports = CoursesRouter;
