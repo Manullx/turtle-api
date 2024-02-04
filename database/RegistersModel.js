@@ -1,5 +1,5 @@
 
-const { INTEGER, BOOLEAN } = require("sequelize");
+const { INTEGER, BOOLEAN, DATE } = require("sequelize");
 const Database = require("./index.js");
 
 const StudentsModel = require("./StudentsModel.js");
@@ -34,6 +34,10 @@ const RegistersModel = Database.define("registers", {
         type: BOOLEAN,
         defaultValue: false,
         allowNull: false
+    },
+    conclusion_date: {
+        type: DATE,
+        allowNull: true
     }
 
 }, { timestamps: false });
