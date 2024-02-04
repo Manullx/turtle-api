@@ -19,6 +19,10 @@ const CoursesModel = Database.define("courses", {
     course_description: {
         type: TEXT,
         allowNull: false
+    },
+    course_rule: {
+        type: TEXT,
+        allowNull: false
     }
 }, {timestamps: false});
 
