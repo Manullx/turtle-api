@@ -4,8 +4,9 @@ const StudentsRouter = Router();
 
 const StudentsModel = require('../database/StudentsModel');
 const RegistersModel = require('../database/RegistersModel');
+const CompaniesModel = require('../database/CompaniesModel');
 
-StudentsRouter.post("/createStudent", (req, res) => {
+StudentsRouter.post("/createStudent", async (req, res) => {
     const student = req.body;
 
     const {
@@ -17,6 +18,17 @@ StudentsRouter.post("/createStudent", (req, res) => {
         courses_id,
         student_company_id
     } = student;
+    
+    let companyId;
+    if(student_company_id !== null) {
+      companyId = await CompaniesModel.findOne({
+        where: {
+          company_register: student_company_id
+        }
+      })
+    }
+
+    console.log(companyId)
 
     StudentsModel.create({
         student_name,
@@ -24,7 +36,7 @@ StudentsRouter.post("/createStudent", (req, res) => {
         student_email,
         student_phone,
         student_password,
-        company_id: student_company_id
+        company_id: student_company_id ? companyId.company_id : student_company_id
     }).then((studentInfo) => {
 
         const { student_id } = studentInfo.dataValues;
@@ -112,26 +124,66 @@ StudentsRouter.get("/getStudents", async (req, res) => {
 });
 
 StudentsRouter.get("/getStudentByDocument", async (req, res) => {
-
-
   const document = req.query.document;
 
-
   try {
-      const student = await StudentsModel.findOne({
-          attributes: { exclude: ['student_id'] },
-          where: {
-            student_document: document
-          }
-        })
+    const student = await StudentsModel.findOne({
+      attributes: { exclude: ['student_id'] },
+      where: {
+        student_document: document
+      }
+    });
 
-    if (student) {
-      res.status(200).json(student);
-    } 
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Estudante não encontrado.' });
+    }
+
+    console.log(student)
+
+    const company = await CompaniesModel.findOne({
+      where: {
+        company_id: student.company_id
+      }
+    });
+
+    if (!company) {
+      console.warn('Empresa não encontrada para o estudante com ID de empresa:', student.company_id);
+    }
+
+    const responseData = {
+      student,
+      company: company || null
+    };
+
+    res.status(200).json(responseData);
   } catch (error) {
     console.error('Erro ao buscar estudante', error);
     res.status(500).json({ success: false, message: 'Erro interno do servidor.', details: 'Erro ao buscar estudante' });
   }
 });
 
-module.exports = StudentsRouter
+StudentsRouter.delete("/deleteStudent", async (req, res) => {
+  const document = req.query.document;
+
+  try {
+    const student = await StudentsModel.findOne({
+      where: {
+        student_document: document
+      }
+    });
+
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Estudante não encontrado.' });
+    }
+
+    await student.destroy();
+
+    res.status(200).json({ success: true, message: 'Estudante excluído com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao excluir estudante', error);
+    res.status(500).json({ success: false, message: 'Erro interno do servidor.', details: 'Erro ao excluir estudante' });
+  }
+});
+
+
+module.exports = StudentsRouter;

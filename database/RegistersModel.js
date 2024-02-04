@@ -37,6 +37,8 @@ const RegistersModel = Database.define("registers", {
 
 }, { timestamps: false });
 
+RegistersModel.belongsTo(CoursesModel, { foreignKey: 'course_id', as: 'course' });
+
 Database.sync();
 
 module.exports = RegistersModel;

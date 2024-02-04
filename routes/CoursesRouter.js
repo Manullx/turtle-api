@@ -30,9 +30,9 @@ CoursesRouter.post("/createCourse", (req, res) => {
                 const { module_id } = moduleInfo.dataValues;
 
                 module.lessons.map(lesson => {
-                    const { lesson_richtext, lesson_video_url, lesson_pdf_url } = lesson;
+                    const { lesson_richtext, lesson_video_url, lesson_pdf_url, lesson_title } = lesson;
 
-                    LessonsModel.create({ module_id, lesson_richtext, lesson_video_url, lesson_pdf_url });
+                    LessonsModel.create({ module_id, lesson_richtext, lesson_video_url, lesson_pdf_url, lesson_title });
                 })
 
             })

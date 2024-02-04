@@ -19,6 +19,10 @@ const LessonsModel = Database.define("lessons", {
         },
         allowNull: false
     },
+    lesson_title: {
+        type: TEXT,
+        allowNull: false
+    },
     lesson_richtext: {
         type: TEXT,
         allowNull: false
