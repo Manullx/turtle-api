@@ -47,7 +47,7 @@ StudentsRouter.post("/createStudent", async (req, res) => {
                 student_id
             })
         })
-        res.status(200).send("Estudante criado com sucesso")
+        res.status(200).send({ created: true })
     }).catch(err => {
         throw err;
     })
@@ -185,19 +185,6 @@ StudentsRouter.delete("/deleteStudent", async (req, res) => {
   }
 });
 
-StudentsRouter.post("/emailStudent", (req, res) => {
-    const { student_email } = req.body;
-
-    StudentsModel.findOne({ where: { student_email } }).then( studentEmail => {
-        if (!!studentEmail) {
-            res.status(200).send( { found: true, first_login: studentEmail.getDataValue("first_login") } );
-        } else {
-            res.status(200).send( { found: false } );
-        }
-    });
-
-});
-
 StudentsRouter.post("/createPassStudent", (req, res) => {
     const { student_email, student_password } = req.body;
 
@@ -216,6 +203,7 @@ StudentsRouter.post("/authStudent", (req, res) => {
     StudentsModel.findOne({ where: { student_email }, attributes: { exclude: [ "company_id" ] } }).then( studentInfo => {
         if ( studentInfo.getDataValue("student_password") == student_password ) {
             let studentInfoJson = studentInfo.toJSON()
+            delete studentInfoJson.student_password;
             res.status(200).send({ auth: true, studentInfoJson })
         } else if ( studentInfo.getDataValue("student_password") != student_password ) {
             res.status(200).send({ auth: false })
