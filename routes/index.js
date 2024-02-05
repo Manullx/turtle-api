@@ -7,6 +7,7 @@ IndexRouter.use(require("./CoursesRouter"));
 IndexRouter.use(require("./StudentsRouter"));
 IndexRouter.use(require("./CompaniesRouter.js"));
 IndexRouter.use(require("./RegistersRouter.js"));
+IndexRouter.use(require("./CertificateRouter.js"));
 
 const AdminsModel = require("../database/AdminsModel.js");
 const StudentsModel = require("../database/StudentsModel.js");
