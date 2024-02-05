@@ -32,7 +32,7 @@ const StudentsModel = Database.define("students", {
   },
   first_login: {
     type: BOOLEAN,
-    defaultValue: false,
+    defaultValue: true,
     allowNull: false
   },
   company_id: {

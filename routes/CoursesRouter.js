@@ -10,6 +10,7 @@ const ModulesModel = require("../database/ModulesModel.js");
 const LessonsModel = require("../database/LessonsModel.js");
 const QuestionsModel = require("../database/QuestionsModel.js");
 const QuestionsOptionsModel = require("../database/QuestionsOptionsModel.js");
+const RegistersModel = require('../database/RegistersModel.js');
 const StudentsModel = require("../database/StudentsModel.js");
 
 CoursesRouter.post("/createCourse", (req, res) => {
@@ -67,14 +68,12 @@ CoursesRouter.post("/createCourse", (req, res) => {
 })
 
 CoursesRouter.get("/getCourseStudent", async (req, res) => {
-    const idStudent = req.query.idStudent;
-
-    console.log(idStudent)
+    const { email } = req.headers;
 
     try {
         const courseStudent = await StudentsModel.findAll({
             where: {
-                student_id: idStudent,  
+                student_email: email,  
             },
         });
 
@@ -149,9 +148,17 @@ CoursesRouter.get("/getAdminCourses", (req, res) => {
 });
 
 CoursesRouter.delete("/deleteCourse", async (req, res) => {
-    const {id} = req.headers;
+    const { id } = req.headers;
   
     try {
+      // Excluir registros associados ao curso
+      await RegistersModel.destroy({
+        where: {
+          course_id: id
+        }
+      });
+  
+      // Em seguida, excluir o curso
       const course = await CoursesModel.findOne({
         where: {
           course_id: id
@@ -170,5 +177,6 @@ CoursesRouter.delete("/deleteCourse", async (req, res) => {
       res.status(500).json({ success: false, message: 'Erro interno do servidor.', details: 'Erro ao excluir curso' });
     }
   });
+  
 
 module.exports = CoursesRouter;

@@ -19,7 +19,7 @@ IndexRouter.post("/emailUser", (req, res) => {
         if (!!adminInfo) {
             res.status(200).send({ found: true, type: "admin" })
         } else {
-            StudentsModel.findOne({ where: { student_email } }).then( studentEmail => {
+            StudentsModel.findOne({ where: { student_email: email } }).then( studentEmail => {
                 if (!!studentEmail) {
                     res.status(200).send( { found: true, type: "student", first_login: studentEmail.getDataValue("first_login") } );
                 } else {
