@@ -130,6 +130,12 @@ RegistersRouter.get("/getRegistersByEmail", async (req, res) => {
         .json({ success: false, message: "Matriculas não encontrado." });
     }
 
+    registers.forEach((register) => {
+      if (register.course && register.course.modules) {
+        register.course.modules.sort((a, b) => a.module_id - b.module_id);
+      }
+    });
+
     const responseData = {
       registers,
     };

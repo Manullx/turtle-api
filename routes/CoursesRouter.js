@@ -16,13 +16,13 @@ const StudentsModel = require("../database/StudentsModel.js");
 CoursesRouter.post("/createCourse", (req, res) => {
 
     const courseInformation = req.body;
-    const { course_title, course_description } = courseInformation;
+    const { course_title, course_description, course_rule } = courseInformation;
 
     const { modules } = courseInformation;
 
     const { questions } = courseInformation;
 
-    CoursesModel.create({ course_title, course_description }).then(courseInfo => {
+    CoursesModel.create({ course_title, course_description, course_rule }).then(courseInfo => {
 
         const { course_id } = courseInfo.dataValues;
 
