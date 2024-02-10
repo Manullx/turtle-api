@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  web:
+    build: .
+    ports: 
+      - "80:80"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: souzatreinamentos
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123
+    ports:
+      - "3306:3306" 
