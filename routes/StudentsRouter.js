@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { mkdir } = require("node:fs");
 
 const StudentsRouter = Router();
 
@@ -6,9 +7,11 @@ const StudentsModel = require("../database/StudentsModel");
 const RegistersModel = require("../database/RegistersModel");
 const CompaniesModel = require("../database/CompaniesModel");
 
+const certificatesPath = __dirname + "\\..\\certificates";
+
 StudentsRouter.post("/createStudent", async (req, res) => {
   const student = req.body;
-
+  
   const {
     student_name,
     student_document,
@@ -19,39 +22,45 @@ StudentsRouter.post("/createStudent", async (req, res) => {
     student_company_id,
   } = student;
 
-  let companyId;
+  let company_info;
   if (student_company_id !== null) {
-    companyId = await CompaniesModel.findOne({
+    company_info = await CompaniesModel.findOne({
       where: {
         company_register: student_company_id,
       },
     });
   }
 
-  console.log(companyId);
-
-  StudentsModel.create({
-    student_name,
-    student_document,
-    student_email,
-    student_phone,
-    student_password,
-    company_id: student_company_id ? companyId.company_id : student_company_id,
-  })
-    .then((studentInfo) => {
-      const { student_id } = studentInfo.dataValues;
-
-      courses_id.map((course_id) => {
-        RegistersModel.create({
-          course_id,
-          student_id,
+  mkdir(certificatesPath + "\\" + student_document, (err) => {
+    if (err.code != "EEXIST") {
+      throw err
+    } else {
+      StudentsModel.findOrCreate({ student_document },{
+        student_name,
+        student_document,
+        student_email,
+        student_phone,
+        student_password,
+        company_id: student_company_id ? companyId.company_id : student_company_id,
+      })
+        .then((studentInfo) => {
+          console.log(studentInfo)
+          const { student_id } = studentInfo.dataValues;
+          
+          console.log(courses_id.map((course_id) => {
+            RegistersModel.create({
+              course_id,
+              student_id,
+            });
+          }));
+          res.status(200).send({ created: true });
+        })
+        .catch((err) => {
+          res.status(400).send(err)
         });
-      });
-      res.status(200).send({ created: true });
-    })
-    .catch((err) => {
-      throw err;
-    });
+    }
+  })
+
 });
 
 StudentsRouter.get("/studentDocument/:document", async (req, res) => {
