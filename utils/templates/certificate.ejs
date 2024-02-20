@@ -55,9 +55,9 @@
             <%= certificateInfo.course_name %>
         </p>
 
-        <p>de acordo com a <%= certificateInfo.rule %>, com carga horária de <%= certificateInfo.time %>.</p>
+        <p>de acordo com a <%= certificateInfo.rule %>, com carga horária de 8h horas.</p>
 
-        <p>Data: <%= certificateInfo.conclusion_date %>
+        <p>Data: sem nada por enquanto
         </p>
 
         <div class="flex flex-row mt-10 gap-10">
@@ -94,16 +94,16 @@
         <div class="certificate">
 
             <div class="text-center mb-4">
-                <h2 class="text-2xl font-bold"><%= certificateInfo.course %></h2>
-                <p>Carga Horária: <%= certificateInfo.time %></p>
+                <h2 class="text-2xl font-bold"><%= certificateInfo.course_name %></h2>
+                <p>Carga Horária: sem por enquanto</p>
             </div>
 
             <div class="mb-10">
                 <h3 class="text-xl font-bold mb-2">I) Conteúdo programático teórico:</h3>
-                <% if (certificateInfo.content_modules.length > 0) { %>
+                <% if (certificateInfo.modules.length > 0) { %>
                     <ul>
-                    <% certificateInfo.content_modules.forEach(item => { %>
-                            <li><%= item.title %></li>
+                    <% certificateInfo.modules.forEach(item => { %>
+                            <li><%= item.module_title %></li>
                         </tr>
                     <%  }); %>
                 <% } %>

@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { mkdir } = require("node:fs");
+const { mkdir, access } = require("node:fs");
 
 const StudentsRouter = Router();
 
@@ -7,7 +7,7 @@ const StudentsModel = require("../database/StudentsModel");
 const RegistersModel = require("../database/RegistersModel");
 const CompaniesModel = require("../database/CompaniesModel");
 
-const certificatesPath = __dirname + "\\..\\certificates";
+const certificatesPath = __dirname + "/../certificates";
 
 StudentsRouter.post("/createStudent", async (req, res) => {
   const student = req.body;
@@ -31,36 +31,48 @@ StudentsRouter.post("/createStudent", async (req, res) => {
     });
   }
 
-  mkdir(certificatesPath + "\\" + student_document, (err) => {
-    if (err.code != "EEXIST") {
-      throw err
-    } else {
-      StudentsModel.findOrCreate({ student_document },{
-        student_name,
-        student_document,
-        student_email,
-        student_phone,
-        student_password,
-        company_id: student_company_id ? companyId.company_id : student_company_id,
-      })
-        .then((studentInfo) => {
-          console.log(studentInfo)
-          const { student_id } = studentInfo.dataValues;
-          
-          console.log(courses_id.map((course_id) => {
-            RegistersModel.create({
-              course_id,
-              student_id,
-            });
-          }));
-          res.status(200).send({ created: true });
-        })
-        .catch((err) => {
-          res.status(400).send(err)
-        });
-    }
-  })
+  console.log(company_info.company_id)
 
+  const directoryPath = certificatesPath + "/" + student_document; // Caminho completo do diretório
+
+  // Verificando se o diretório já existe
+  access(directoryPath, (err) => {
+    if (err) {
+      // Se o diretório não existe, tenta criar
+      mkdir(directoryPath, { recursive: true }, (err) => {
+        if (err) {
+          console.error('Erro ao criar o diretório:', err);
+          res.status(500).send({ error: 'Erro ao criar o diretório' });
+          return;
+        }
+      });
+    }
+  });
+
+  StudentsModel.create({
+    student_name,
+    student_document,
+    student_email,
+    student_phone,
+    student_password,
+    company_id: company_info.company_id
+  })
+  .then((studentInfo) => {
+    console.log(studentInfo);
+    const { student_id } = studentInfo.dataValues;
+          
+    courses_id.map((course_id) => {
+      RegistersModel.create({
+        course_id,
+        student_id,
+      });
+    });
+    res.status(200).send({ created: true });
+  })
+  .catch((err) => {
+    console.log(err)
+    res.status(400).send(err);
+  });
 });
 
 StudentsRouter.get("/studentDocument/:document", async (req, res) => {
