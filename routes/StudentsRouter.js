@@ -363,7 +363,15 @@ StudentsRouter.put("/updateStudent", async (req, res) => {
     student_password,
   } = updatedData.student;
 
-  const { company_id } = updatedData.workplace;
+  const { company_register } = updatedData.workplace;
+
+  const company = await CompaniesModel.findOne({
+    where: {
+      company_register: company_register
+    }
+  })
+
+  const { company_id } = company;
 
   const data = {
     student_name,
